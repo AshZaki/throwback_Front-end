@@ -3,7 +3,7 @@
 import React, { Component, Fragment } from 'react';
 import { addGooglePhotosScript } from '../scripts/logins';
 import { secrets } from '../scripts/secrets';
-import { Switch, Box, Icon, Button } from 'gestalt';
+import { IconButton } from 'gestalt';
 import 'gestalt/dist/gestalt.css';
 
 class GoogleAuthorize extends Component {
@@ -73,25 +73,13 @@ class GoogleAuthorize extends Component {
     render() {
         return (
             <Fragment>
-                {/* <Box>
-                    <Switch
-                        onChange={this.handleChange}
-                        onClick={this.handleClick}
-                        id="emailNotifications"
-                        switched={this.state.switched}
-                    />
-                </Box> */}
-                {/* <Box padding={2}
-                    onClick={this.handleClick}>
-                        <Button accessibilityLabel="ConnectFB" text="Connect" />
-                </Box> */}
-                <button
-                    type="button"
-                    className="btn"
-                    onClick={this.handleClick}>
-                    Google
-                </button>
-
+                 <IconButton
+                    accessibilityLabel="Google Phpto"
+                    bgColor="transparent"
+                    icon="google-plus"
+                    iconColor="gray"
+                    onClick={this.handleClick}
+                />
             </Fragment>
         )
     }

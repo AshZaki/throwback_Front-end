@@ -7,15 +7,9 @@ import { secrets } from '../scripts/secrets';
 
 class FacebookAuthorize extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = { switched: false };
-        this.handleChange = this._handleChange.bind(this);
+    state ={
+        clicked: false
     }
-    _handleChange() {
-        this.setState({ switched: !this.state.switched });
-    }
-
     async componentDidMount() {
         try {
             await addFacebookScript();
@@ -63,6 +57,9 @@ class FacebookAuthorize extends Component {
                     FB.api('/me', (response) => {
                         // console.log(response)
                         // console.log('Good to see you, ' + response.name + '.');
+                        this.setState({
+                            clicked: true
+                        })
                     });
                     params.fbAccessToken = resp.authResponse.accessToken;
                     onSuccess(this.state, this.props.currentUser);
@@ -76,18 +73,11 @@ class FacebookAuthorize extends Component {
             <Fragment>
                 <IconButton
                     accessibilityLabel="Facebook"
-                    bgColor="transparentDarkGray"
+                    bgColor="transparent"
                     icon="facebook"
                     iconColor="gray"
                     onClick={this.handleClick}
                 />
-                {/* <button
-                    type="button"
-                    className="btn facebook"
-                    onClick={this.handleClick}>
-                    Facebook
-                </button> */}
-
             </Fragment>
         )
     }

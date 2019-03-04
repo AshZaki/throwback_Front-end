@@ -36,6 +36,7 @@ class BoardCollection extends Component {
     handleSubmit = (e) => {
         // e.preventDefault()
         this.props.createNewBoard(this.state, this.props.currentUser)
+        this.handleToggleModal()
         // e.target.reset()
     }
 
@@ -118,7 +119,10 @@ class BoardCollection extends Component {
                         </Box>
                     </Container>
                 </Box>
-                <BoardList />
+                <BoardList 
+                    allBoard={this.props.allBoard}
+                    handleDeleteBoard={this.props.handleDeleteBoard}
+                />
             </Fragment>
         )
     }

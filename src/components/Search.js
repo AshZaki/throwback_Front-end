@@ -46,7 +46,7 @@ class Search extends Component {
             await addGooglePhotosScript();
             gapi.load('auth2', function () {
                 const auth2 = gapi.auth2.init({
-                    client_id: secrets.GAPI_CLIENT_ID,
+                    client_id: secrets.GAPI_CLIENT_ID ,
                     fetch_basic_profile: false,
                     scope: 'profile'
                 });
@@ -65,18 +65,18 @@ class Search extends Component {
         this.props.handleToggleLarge();
         const since = Math.floor(this.state.dates.start.getTime() / 1000);
         const until = Math.floor(this.state.dates.end.getTime() / 1000);
-        // console.log(since, until)
-        // FB.api(`/me?fields=posts.since(${since}).until(${until}){place,picture,full_picture,message,created_time,attachments{media,title,type,url,description}}`,
-        //     (response) => {
-        //         console.log(response)
-        //         if (response && !response.error) {
-        //             this.setState({
-        //                 facebookPosts: response.posts.data,
-        //             });
-        //             this.props.handleFacebookPosts(this.state.facebookPosts);
-        //         }
-        //     }
-        // );
+        console.log(since, until)
+        FB.api(`/me?fields=posts.since(${since}).until(${until}){place,picture,full_picture,message,created_time,attachments{media,title,type,url,description}}`,
+            (response) => {
+                console.log(response)
+                if (response && !response.error) {
+                    this.setState({
+                        facebookPosts: response.posts.data,
+                    });
+                    this.props.handleFacebookPosts(this.state.facebookPosts);
+                }
+            }
+        );
 
         
 

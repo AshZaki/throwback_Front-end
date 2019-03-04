@@ -1,3 +1,4 @@
+/*global FB*/
 import React, { Component, Fragment } from 'react';
 import { Box, Card, Text, Mask, Image, IconButton } from 'gestalt';
 import 'gestalt/dist/gestalt.css';
@@ -15,6 +16,7 @@ class LikeCard extends Component {
     _handleMouseLeave() {
         this.setState(() => ({ hovered: false }));
     }
+    
 
     render() {
         return (
@@ -44,7 +46,7 @@ class LikeCard extends Component {
                             <Box padding={1}>
                                 <IconButton
                                     accessibilityLabel="Delete"
-                                    bgColor="transparentDarkGray"
+                                    bgColor="transparent"
                                     icon="trash-can"
                                     iconColor="gray"
                                     onClick={e => this.props.handleDeleteCard(this.props.card.id, this.props.facebookUser)}
@@ -53,13 +55,12 @@ class LikeCard extends Component {
                             <Box padding={1}>
                                 <IconButton
                                     accessibilityLabel="Share"
-                                    bgColor="transparentDarkGray"
+                                    bgColor="transparent"
                                     icon="share"
                                     iconColor="gray"
                                     // onClick={}
                                 /> 
-                            </Box>
-                            
+                            </Box>    
                         </Box>: null }
                     </Card> 
                     :

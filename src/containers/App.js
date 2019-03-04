@@ -4,6 +4,7 @@ import '../App.css';
 import Login from '../components/Login';
 import NotFound from '../components/NotFound';
 import ThrowBack from './ThrowBack'
+import Search from '../components/Search'
 
 
 class App extends Component {
@@ -93,7 +94,7 @@ class App extends Component {
                 <Login onLogIn={this.handleLogin} />
             }}
             />
-
+            <Route exact path="/search" component={Search} />
             <Route component={NotFound} />
 
           </Switch> : null}

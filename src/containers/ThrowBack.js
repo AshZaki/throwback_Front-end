@@ -27,6 +27,11 @@ class ThrowBack extends Component {
     };
 
     componentDidMount() {
+        this.getAllFavoritePosts()
+        this.getAllBoards()
+    }
+
+    getAllFavoritePosts(){
         fetch('http://localhost:4000/api/v1/favorite_posts')
             .then(res => res.json())
             .then(likeCardsObj => {
@@ -34,6 +39,16 @@ class ThrowBack extends Component {
                     likeCards: likeCardsObj
                 })
             })
+    }
+
+    getAllBoards(){
+        fetch('http://localhost:4000/api/v1/boards')
+        .then(res => res.json())
+        .then(boards => {
+            this.setState({
+                allBoard: boards
+            })
+        })
     }
 
     onFacebookLoggedIn = (fbUserObj, currentUser) => {
@@ -68,7 +83,7 @@ class ThrowBack extends Component {
 
     handleFBCardClicked = (fbcard, fbaccount) => {
         // debugger
-        console.log(fbcard)
+        // console.log(fbcard)
         const data = {
             account_id: fbaccount.id,
             board_id: 1,
@@ -99,20 +114,50 @@ class ThrowBack extends Component {
         fetch(`http://localhost:4000/api/v1/favorite_posts/${cardID}`, {
             method: "DELETE"
         })
-            .then(res => res.json())
-            .then(clickedCard => {
-                debugger
-                // console.log(clickedCard)
-                this.setState({
-                    likeCards: this.state.likeCards.filter(card => card.id !== cardID)
-                })
-                console.log(this.state)
+        .then(res => res.json())
+        .then(clickedCard => {
+            // console.log(clickedCard)
+            this.setState({
+                likeCards: this.state.likeCards.filter(card => card.id !== cardID)
             })
+            console.log(this.state)
+        })
     }
 
     createNewBoard = (board, currentUser) => {
-        console.log(board, currentUser)
+        // console.log(board, currentUser)
+        fetch('http://localhost:4000/api/v1/boards', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                user_id: currentUser.id,
+                name: board.name,
+                description: board.description,
+            })
+        }).then(res => res.json())
+        .then(newBoard =>
+            // console.log(newBoard)
+            this.setState({
+                allBoard: [...this.state.allBoard, newBoard]
+            })
+        )
+    }
 
+    handleDeleteBoard = (boardID) => {
+        console.log(boardID)
+        fetch(`http://localhost:4000/api/v1/boards/${boardID}`, {
+            method: 'DELETE'
+        })
+        .then(res => res.json())
+        .then(board => {
+            // console.log(board)
+            this.setState({
+                allBoard: this.state.allBoard.filter(board => board.id !== boardID)
+            })
+        })
     }
 
     render() {
@@ -139,6 +184,9 @@ class ThrowBack extends Component {
 
                 <Profile
                     loginUser={this.props.logged_in}
+                    // currentUser={this.props.currentUser}
+                    onSuccess={this.onFacebookLoggedIn}
+                    handleFacebookPosts={this.handleFacebookPosts}
                 />
 
                 <Box display="flex" direction="row" paddingY={2}>
@@ -179,6 +227,8 @@ class ThrowBack extends Component {
                             <BoardCollection
                                 currentUser={this.props.logged_in}
                                 createNewBoard={this.createNewBoard}
+                                allBoard={this.state.allBoard}
+                                handleDeleteBoard={this.handleDeleteBoard}
                             />
                         </Column>
                         <Column span={1}></Column>

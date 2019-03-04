@@ -1,6 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import { Box, Text, Avatar, Column, Heading,IconButton,Container } from 'gestalt';
 import 'gestalt/dist/gestalt.css';
+import FacebookAuthorize from './FacebookAuthorize'
+import GoogleAuthorize from './GoogleAuthorize'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faFacebookF, faInstagram, faTwitter, faGoogle, faPinterest } from '@fortawesome/free-brands-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+library.add(faFacebookF, faInstagram, faTwitter, faGoogle, faPinterest)
+
 
 class Profile extends Component {
 
@@ -50,27 +57,17 @@ class Profile extends Component {
                             <Container>
                                 <Box direction="row" paddingY={2} display="flex">
                                     <Box paddingX={1}>
-                                        <IconButton
-                                            accessibilityLabel="Facebook"
-                                            bgColor="transparentDarkGray"
-                                            icon="facebook"
-                                            iconColor="gray"
-                                            // onClick={}
-                                        /> 
+                                        <FacebookAuthorize
+                                            currentUser={this.props.loginUser}
+                                            onSuccess={this.props.onSuccess}
+                                            handleFacebookPosts={this.props.handleFacebookPosts}
+                                        />
                                     </Box>
-                                    <Box paddingX={1}>
+                                    <Box paddingX={1} size="lg">
+                                        {/* <FontAwesomeIcon icon={['fab', 'instagram']} /> */}
                                         <IconButton
                                             accessibilityLabel="Instagram"
-                                            bgColor="transparentDarkGray"
-                                            icon="share"
-                                            iconColor="gray"
-                                            // onClick={}
-                                        /> 
-                                    </Box>
-                                    <Box paddingX={1}>
-                                        <IconButton
-                                            accessibilityLabel="Twitter"
-                                            bgColor="transparentDarkGray"
+                                            bgColor="transparent"
                                             icon="twitter"
                                             iconColor="gray"
                                             // onClick={}
@@ -78,17 +75,22 @@ class Profile extends Component {
                                     </Box>
                                     <Box paddingX={1}>
                                         <IconButton
-                                            accessibilityLabel="Google Photo"
-                                            bgColor="transparentDarkGray"
-                                            icon="share"
+                                            accessibilityLabel="Twitter"
+                                            bgColor="transparent"
+                                            icon="twitter"
                                             iconColor="gray"
                                             // onClick={}
                                         /> 
                                     </Box>
                                     <Box paddingX={1}>
+                                        <GoogleAuthorize
+                                        
+                                        />
+                                    </Box>
+                                    <Box paddingX={1}>
                                         <IconButton
                                             accessibilityLabel="Pinterest"
-                                            bgColor="transparentDarkGray"
+                                            bgColor="transparent"
                                             icon="pinterest"
                                             iconColor="gray"
                                             // onClick={}
