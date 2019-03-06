@@ -31,29 +31,18 @@ class Profile extends Component {
         return (
             <Fragment>
                 <Box display="flex" direction="row" paddingY={2}>
-                    <Column span={4}>
+                    <Column span={5}>
                         <Box color="white" padding={1}>
                             <Box color="white" paddingY={2}>
                                 <Text align="center"></Text>
                             </Box>
                         </Box>
                     </Column>
-                    <Column span={1}>
-                        <Box color="white" padding={1}>
-                            <Box color="white" paddingY={2}>
-                                {/* <Avatar align="center"
-                                    size="lg"
-                                    src="/gestalt/static/media/keerthi.b283324e.jpg"
-                                    name={this.props.loginUser.first_name}
-                                /> */}
-                            </Box>
-                        </Box>
-                    </Column>
-                    <Column span={4}>
-                        <Box color="white" padding={1}>
-                            <Box color="white" paddingY={2}>
+                    <Column span={2}>
+                        <Box color="white" padding={1} justifyContent="center" alignItems="center">
+                            {/* <Box color="white" paddingY={2}>
                                 <Heading size="sm">{this.props.loginUser.first_name} {this.props.loginUser.last_name}</Heading>
-                            </Box>
+                            </Box> */}
                             <Container>
                                 <Box direction="row" paddingY={2} display="flex">
                                     <Box paddingX={1}>
@@ -61,17 +50,8 @@ class Profile extends Component {
                                             currentUser={this.props.loginUser}
                                             onSuccess={this.props.onSuccess}
                                             handleFacebookPosts={this.props.handleFacebookPosts}
+                                            isFacebookLoggedIn={this.props.isFacebookLoggedIn}
                                         />
-                                    </Box>
-                                    <Box paddingX={1} size="lg">
-                                        {/* <FontAwesomeIcon icon={['fab', 'instagram']} /> */}
-                                        <IconButton
-                                            accessibilityLabel="Instagram"
-                                            bgColor="transparent"
-                                            icon="twitter"
-                                            iconColor="gray"
-                                            // onClick={}
-                                        /> 
                                     </Box>
                                     <Box paddingX={1}>
                                         <IconButton
@@ -100,7 +80,7 @@ class Profile extends Component {
                             </Container>
                         </Box>
                     </Column>
-                    <Column span={3}>
+                    <Column span={5}>
                         <Box color="white" padding={1}>
                             <Box color="white" paddingY={2}>
                                 

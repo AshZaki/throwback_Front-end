@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Box, Label, Text, TextField, Button} from 'gestalt';
+import { Box, Label, Text, TextField, Button, Container} from 'gestalt';
 import 'gestalt/dist/gestalt.css';
 
 class Login extends Component {
@@ -25,39 +25,43 @@ class Login extends Component {
     render() {
         return (
             <Fragment>
-                <Box column={3}>
-                    <form onChange={this.onTyping} onSubmit={this.handleSubmit}>
-                        <Box marginBottom={2}>
-                            <Label htmlFor="username">
-                                <Text>Username</Text>
-                            </Label>
-                        </Box>
-                        <TextField
-                            onChange={() => {}}
-                            id="username"
-                            name="username"
-                            placeholder="Username"
-                            type="text"
-                            errorMessage={!this.state.username ? "This field can't be blank!" : null}
-                        />
-                        <Box marginBottom={2}>
-                            <Label htmlFor="password">
-                                <Text>Password</Text>
-                            </Label>
-                        </Box>
-                        <TextField
-                            onChange={() => {}}
-                            id="password"
-                            name="password"
-                            placeholder="Password"
-                            type="password"
-                            errorMessage={!this.state.password ? "This field can't be blank!" : null}
-                        />
-                        <Box padding={2}>
-                            <Button color="red" text="Submit" type="submit" size="md"/>
-                        </Box>
-                    </form>
-                </Box>
+                <div className="centered">
+                        <Container>
+                            <Box column={6} justifyContent="start" alignItems="center">
+                                <form onChange={this.onTyping} onSubmit={this.handleSubmit}>
+                                    <Box marginBottom={2}>
+                                        <Label htmlFor="username">
+                                            <Text>Username</Text>
+                                        </Label>
+                                    </Box>
+                                    <TextField
+                                        onChange={() => {}}
+                                        id="username"
+                                        name="username"
+                                        placeholder="Username"
+                                        type="text"
+                                        errorMessage={!this.state.username ? "This field can't be blank!" : null}
+                                    />
+                                    <Box marginBottom={2}>
+                                        <Label htmlFor="password">
+                                            <Text>Password</Text>
+                                        </Label>
+                                    </Box>
+                                    <TextField
+                                        onChange={() => {}}
+                                        id="password"
+                                        name="password"
+                                        placeholder="Password"
+                                        type="password"
+                                        errorMessage={!this.state.password ? "This field can't be blank!" : null}
+                                    />
+                                    <Box padding={2}>
+                                        <Button color="red" text="Submit" type="submit" size="md"/>
+                                    </Box>
+                                </form>
+                            </Box>
+                        </Container>
+                </div>  
             </Fragment>
         )
     }

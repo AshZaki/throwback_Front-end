@@ -7,6 +7,9 @@ import BoardCollection from './BoardCollection'
 import { Box, Column, Icon, SegmentedControl, } from 'gestalt';
 import 'gestalt/dist/gestalt.css';
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
+import FavoritesMapContainer from './FavoritesMapContainer';
+import Search from '../components/Search'
+
 
 class ThrowBack extends Component {
     constructor(props) {
@@ -18,6 +21,8 @@ class ThrowBack extends Component {
             facebookUser: null,
             facebookPosts: [],
             itemIndex: 0,
+            isFacebookLoggedIn: false,
+            isGooglePhotosLoggedIn: false,
         }
         this.handleItemChange = this.handleItemChange.bind(this);
     }
@@ -31,7 +36,7 @@ class ThrowBack extends Component {
         this.getAllBoards()
     }
 
-    getAllFavoritePosts(){
+    getAllFavoritePosts() {
         fetch('http://localhost:4000/api/v1/favorite_posts')
             .then(res => res.json())
             .then(likeCardsObj => {
@@ -41,13 +46,19 @@ class ThrowBack extends Component {
             })
     }
 
-    getAllBoards(){
+    getAllBoards() {
         fetch('http://localhost:4000/api/v1/boards')
-        .then(res => res.json())
-        .then(boards => {
-            this.setState({
-                allBoard: boards
+            .then(res => res.json())
+            .then(boards => {
+                this.setState({
+                    allBoard: boards
+                })
             })
+    }
+
+    onGooglePhotosLoggedIn = () => {
+        this.setState({
+            isGooglePhotosLoggedIn: true
         })
     }
 
@@ -68,9 +79,13 @@ class ThrowBack extends Component {
         })
             .then(res => res.json())
             .then(fbUser => {
+                console.log('logging into fb')
                 this.setState({
-                    userFBAccount: fbUser
+                    userFBAccount: fbUser,
+                    isFacebookLoggedIn: true
                 })
+
+
             })
     }
 
@@ -89,8 +104,10 @@ class ThrowBack extends Component {
             board_id: 1,
             created_time: fbcard.created_time,
             message: fbcard.message,
-            full_picture: fbcard.full_picture,
-            place_name: (!fbcard.place ? "N/A" : fbcard.place.name),
+            full_picture: fbcard.attachments.data[0].media.image.src,
+            place_name: (!fbcard.place ? null : fbcard.place.name),
+            latitude: (!fbcard.place ? null : fbcard.place.location.latitude),
+            longitude: (!fbcard.place ? null : fbcard.place.location.longitude)
         }
         fetch('http://localhost:4000/api/v1/favorite_posts', {
             method: 'POST',
@@ -103,7 +120,7 @@ class ThrowBack extends Component {
             .then(newFBCard =>
                 // console.log(newFBCard)
                 this.setState({
-                    likeCards: [...this.state.likeCards, newFBCard]
+                    likeCards: [newFBCard, ...this.state.likeCards]
                 })
             )
     }
@@ -114,14 +131,14 @@ class ThrowBack extends Component {
         fetch(`http://localhost:4000/api/v1/favorite_posts/${cardID}`, {
             method: "DELETE"
         })
-        .then(res => res.json())
-        .then(clickedCard => {
-            // console.log(clickedCard)
-            this.setState({
-                likeCards: this.state.likeCards.filter(card => card.id !== cardID)
+            .then(res => res.json())
+            .then(clickedCard => {
+                // console.log(clickedCard)
+                this.setState({
+                    likeCards: this.state.likeCards.filter(card => card.id !== cardID)
+                })
+                console.log(this.state)
             })
-            console.log(this.state)
-        })
     }
 
     createNewBoard = (board, currentUser) => {
@@ -138,12 +155,42 @@ class ThrowBack extends Component {
                 description: board.description,
             })
         }).then(res => res.json())
-        .then(newBoard =>
-            // console.log(newBoard)
-            this.setState({
-                allBoard: [...this.state.allBoard, newBoard]
+            .then(newBoard =>
+                // console.log(newBoard)
+                this.setState({
+                    allBoard: [...this.state.allBoard, newBoard]
+                })
+            )
+    }
+
+    editBoard = (boardEdit, myBoard, currentUser) => {
+        // console.log(board, user)
+        fetch(`http://localhost:4000/api/v1/boards/${myBoard.id}`, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                user_id: currentUser.id,
+                name: boardEdit.name,
+                description: boardEdit.description,
             })
-        )
+        })
+        .then(res => res.json())
+        .then(newEditBoard => {
+            const allBoardsCopy = [...this.state.allBoard];
+            for(let i = 0; i < allBoardsCopy.length; i++) {
+                if(allBoardsCopy[i].id === newEditBoard.id) {
+                    allBoardsCopy[i] = newEditBoard;
+                    break;
+                }
+            }
+            this.setState({
+                allBoard: allBoardsCopy
+            })
+        })
+
     }
 
     handleDeleteBoard = (boardID) => {
@@ -151,21 +198,21 @@ class ThrowBack extends Component {
         fetch(`http://localhost:4000/api/v1/boards/${boardID}`, {
             method: 'DELETE'
         })
-        .then(res => res.json())
-        .then(board => {
-            // console.log(board)
-            this.setState({
-                allBoard: this.state.allBoard.filter(board => board.id !== boardID)
+            .then(res => res.json())
+            .then(board => {
+                // console.log(board)
+                this.setState({
+                    allBoard: this.state.allBoard.filter(board => board.id !== boardID)
+                })
             })
-        })
     }
 
     render() {
         // console.log(this.props)
         const items = [
+            'Search',
             'Like',
-            'Board',
-            'Map',
+            'Boards',
             <Icon
                 icon="location"
                 accessibilityLabel="Location"
@@ -187,6 +234,7 @@ class ThrowBack extends Component {
                     // currentUser={this.props.currentUser}
                     onSuccess={this.onFacebookLoggedIn}
                     handleFacebookPosts={this.handleFacebookPosts}
+                    isFacebookLoggedIn={this.state.isFacebookLoggedIn}
                 />
 
                 <Box display="flex" direction="row" paddingY={2}>
@@ -200,27 +248,34 @@ class ThrowBack extends Component {
                     </Column>
                     <Column span={1}></Column>
                 </Box>
-
-                <ShowPostFromApi
-                    facebookPosts={this.state.facebookPosts}
-                    facebookUser={this.state.userFBAccount}
-                    handleFBCardClicked={this.handleFBCardClicked}
-                />
                 {this.state.itemIndex === 0 ?
+                    <Box display="flex" direction="row" paddingY={2}>
+                        <Column span={1}></Column>
+                        <Column span={10}>
+                            <Search
+                                handleFacebookPosts={this.handleFacebookPosts}
+                                facebookPosts={this.state.facebookPosts}
+                                facebookUser={this.state.userFBAccount}
+                                handleFBCardClicked={this.handleFBCardClicked}
+                            />
+                            </Column>
+                        <Column span={1}></Column>
+                    </Box>
+                : null}
+                {this.state.itemIndex === 1 ?
                     <Box display="flex" direction="row" paddingY={2}>
                         <Column span={1}></Column>
                         <Column span={10}>
                             <LikeContainer
                                 likeCards={this.state.likeCards}
                                 handleDeleteCard={this.handleDeleteCard}
-
                             />
                         </Column>
                         <Column span={1}></Column>
                     </Box>
 
                     : null}
-                {this.state.itemIndex === 1 ?
+                {this.state.itemIndex === 2 ?
                     <Box display="flex" direction="row" paddingY={2}>
                         <Column span={1}></Column>
                         <Column span={10}>
@@ -228,7 +283,20 @@ class ThrowBack extends Component {
                                 currentUser={this.props.logged_in}
                                 createNewBoard={this.createNewBoard}
                                 allBoard={this.state.allBoard}
+                                editBoard={this.editBoard}
                                 handleDeleteBoard={this.handleDeleteBoard}
+                            />
+                        </Column>
+                        <Column span={1}></Column>
+                    </Box>
+                    : null}
+                
+                {this.state.itemIndex === 3 ? // map
+                    <Box display="flex" direction="row" paddingY={2}>
+                        <Column span={1}></Column>
+                        <Column span={10}>
+                            <FavoritesMapContainer
+                                favorites={this.state.likeCards}
                             />
                         </Column>
                         <Column span={1}></Column>

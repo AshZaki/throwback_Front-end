@@ -3,7 +3,8 @@
 /*global auth2*/
 import React, { Component, Fragment } from 'react';
 import MyCalendar from './MyCalendar'
-import { Box, Modal, Heading, Button } from 'gestalt';
+import ShowPostFromApi from '../containers/ShowPostFromApi'
+import { Box, Modal, Heading, Button, Column } from 'gestalt';
 import { addGooglePhotosScript } from '../scripts/logins';
 import 'gestalt/dist/gestalt.css';
 import { secrets } from '../scripts/secrets';
@@ -43,10 +44,10 @@ class Search extends Component {
                     this.setState({ fbLoggedIn: true })
                 }
             });
-            await addGooglePhotosScript();
+            await addGooglePhotosScript(secrets.GAPI_CLIENT_ID);
             gapi.load('auth2', function () {
                 const auth2 = gapi.auth2.init({
-                    client_id: secrets.GAPI_CLIENT_ID ,
+                    client_id: secrets.GAPI_CLIENT_ID,
                     fetch_basic_profile: false,
                     scope: 'profile'
                 });
@@ -62,10 +63,42 @@ class Search extends Component {
     }
 
     onClickSearch = () => {
-        this.props.handleToggleLarge();
+
+        // google photos:
+        // gapi.client.photoslibrary.mediaItems.search({
+        //     "resource": {
+        //         "filters": {
+        //             "dateFilter": {
+        //                 "ranges": [
+        //                     {
+        //                         "startDate": {
+        //                             "day": 1,
+        //                             "month": 1,
+        //                             "year": 2017
+        //                         },
+        //                         "endDate": {
+        //                             "day": 3,
+        //                             "month": 3,
+        //                             "year": 2017
+        //                         }
+        //                     }
+        //                 ]
+        //             }
+        //         }
+        //     }
+        // })
+        // .then(function (response) {
+        //     // Handle the results here (response.result has the parsed body).
+        //     console.log("Response", response);
+        // },
+        //     function (err) { console.error("Execute error", err); });
+
+
+
+        // fb
         const since = Math.floor(this.state.dates.start.getTime() / 1000);
         const until = Math.floor(this.state.dates.end.getTime() / 1000);
-        console.log(since, until)
+        // console.log(since, until)
         FB.api(`/me?fields=posts.since(${since}).until(${until}){place,picture,full_picture,message,created_time,attachments{media,title,type,url,description}}`,
             (response) => {
                 console.log(response)
@@ -78,42 +111,45 @@ class Search extends Component {
             }
         );
 
-        
+
+
 
     }
 
     render() {
-        // console.log(this.wprops)
+        console.log(this.props)
         return (
             <Fragment>
-                <Box padding={1}>
-                    {this.props.lg &&
-                        <Modal
-                            accessibilityCloseLabel="close"
-                            accessibilityModalLabel="View default padding and styling"
-                            heading="Search"
-                            onDismiss={this.props.handleToggleLarge}
-                            footer={
-                                <Heading size="sm">
-                                    <Box margin={-2}>
-                                        <Box padding={2}>
-                                            <Button color="red" text="SEARCH" type="submit"
-                                                onClick={this.onClickSearch}
-                                            />
-                                        </Box>
-                                    </Box>
-                                </Heading>
-                            }
-                            size="lg">
-                            <Box padding={2}>
-                                <Heading size="sm">
-                                    <MyCalendar
-                                        datesPicker={this.handleDatesPicker}
-                                    />
-                                </Heading>
+                <Box justifyContent="center" alignItems="center" padding={1} marginBottom={4}>
+                    <MyCalendar
+                        datesPicker={this.handleDatesPicker}
+                    />
+                </Box>
+                <Box display="flex" direction="row" paddingY={2}>
+                    <Column span={5}>
+
+                    </Column>
+                    <Column span={2}>
+                        <Box color="white" padding={1}>
+                            <Button color="red" text="SEARCH" type="submit"
+                                onClick={this.onClickSearch}
+                            />
+                        </Box>
+                    </Column>
+                    {/* <Column span={4}>
+                        <Box color="lightGray" padding={1}>
+                            <Box color="white" paddingY={2}>
+                                <Text align="center">4</Text>
                             </Box>
-                        </Modal>
-                    }
+                        </Box>
+                    </Column> */}
+                </Box>
+                <Box>
+                    <ShowPostFromApi
+                        facebookPosts={this.props.facebookPosts}
+                        facebookUser={this.props.facebookUser}
+                        handleFBCardClicked={this.props.handleFBCardClicked}
+                    />
                 </Box>
             </Fragment>
         )

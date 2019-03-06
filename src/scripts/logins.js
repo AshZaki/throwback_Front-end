@@ -10,15 +10,7 @@ const addScript = (id, src, options) => new Promise((resolve, reject) => {
     script.addEventListener('load', resolve);
     script.addEventListener('error', () => reject(new Error(`Error loading ${id}.`)));
     script.addEventListener('abort', () => reject(new Error(`${id}  loading aborted.`)));
-    if(options) {
-        options.forEach(option => {
-            script.setAttribute(option, '');
-        })
-    }
     document.getElementsByTagName('head')[0].appendChild(script);
-    if(id === "googleAuth") {
-
-    }
 });
 export const addFacebookScript = () => {
     const id = 'facebookAuth';
@@ -27,12 +19,31 @@ export const addFacebookScript = () => {
     return addScript(id, src);
 };
 
-export const addGooglePhotosScript = (clientId) => {
-    const id = 'googleAuth';
-    const src = 'https://apis.google.com/js/api.js';
-    const meta = document.createElement('meta');
-    meta.setAttribute('name', 'google-signin-client_id')
-    meta.setAttribute('content', clientId)
-    document.getElementsByTagName('head')[0].appendChild(meta);
-    return addScript(id, src, ['async', 'defer']);
-};
+export const addGooglePhotosScript = (clientId) => new Promise((resolve, reject) => {
+    const initAuth = function () {
+        window.gapi.load('client:auth2', function () {
+            window.gapi.auth2.init({
+                client_id: clientId
+            }).then(googleAuth => {
+                if (googleAuth) {
+                    if (googleAuth.isSignedIn.get()) {
+                        const googleUser = googleAuth.currentUser.get();
+                        return resolve(true);
+                    }
+                }
+            })
+        });
+    }
+    const script = document.createElement("script");
+    script.src = "https://apis.google.com/js/platform.js";
+    script.async = true;
+    script.defer = true;
+    script.onload = initAuth;
+    const meta = document.createElement("meta");
+    meta.name = "google-signin-client_id";
+    meta.content = clientId;
+    document.head.appendChild(meta);
+    document.head.appendChild(script);
+
+
+});

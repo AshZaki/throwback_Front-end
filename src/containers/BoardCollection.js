@@ -41,12 +41,34 @@ class BoardCollection extends Component {
     }
 
     render() {
+        console.log(this.props)
         const { showModal } = this.state;
         return (
             <Fragment>
                 <Box>
                     <Container>
-                        <Box color="white" padding={1}>
+                        <Box justifyContent="end" alignItems="center" display="flex">
+                            <IconButton
+                                accessibilityLabel="View"
+                                bgColor="transparent"
+                                icon="view-type-default"
+                                iconColor="gray"
+                                // onClick={this.handleToggleModal}
+                            />
+                            <IconButton
+                                accessibilityLabel="View"
+                                bgColor="transparent"
+                                icon="view-type-dense"
+                                iconColor="gray"
+                                // onClick={this.handleToggleModal}
+                            />
+                            <IconButton
+                                accessibilityLabel="View"
+                                bgColor="transparent"
+                                icon="view-type-list"
+                                iconColor="gray"
+                                // onClick={this.handleToggleModal}
+                            />
                             <IconButton
                                 accessibilityLabel="Add new board"
                                 bgColor="transparent"
@@ -116,12 +138,14 @@ class BoardCollection extends Component {
                                     </Box>
                                 </Modal>
                             )}
-                        </Box>
+                        </Box>        
                     </Container>
                 </Box>
                 <BoardList 
+                    currentUser={this.props.currentUser}
                     allBoard={this.props.allBoard}
                     handleDeleteBoard={this.props.handleDeleteBoard}
+                    editBoard={this.props.editBoard}
                 />
             </Fragment>
         )

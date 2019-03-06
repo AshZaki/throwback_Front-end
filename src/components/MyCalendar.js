@@ -39,15 +39,18 @@ class MyCalendar extends Component {
         startCalendar =
             <InfiniteCalendar
                 Component={withRange(Calendar)}
-                width={700}
-                height={500}
+                displayOptions={{
+                    layout: 'landscape'
+                   }}
+                width={800}
+                height={350}
                 selected={this.state.selectedDates}
                 onSelect={this.onCalendarSelect}
             />
 
         return (
             <Fragment>
-                <Box display="flex" direction="row" paddingY={2}>
+                <Box display="flex" justifyContent="center" alignItems="center">
                    {startCalendar}
                 </Box>
             </Fragment>

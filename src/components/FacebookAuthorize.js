@@ -7,9 +7,6 @@ import { secrets } from '../scripts/secrets';
 
 class FacebookAuthorize extends Component {
 
-    state ={
-        clicked: false
-    }
     async componentDidMount() {
         try {
             await addFacebookScript();
@@ -57,9 +54,6 @@ class FacebookAuthorize extends Component {
                     FB.api('/me', (response) => {
                         // console.log(response)
                         // console.log('Good to see you, ' + response.name + '.');
-                        this.setState({
-                            clicked: true
-                        })
                     });
                     params.fbAccessToken = resp.authResponse.accessToken;
                     onSuccess(this.state, this.props.currentUser);
@@ -75,7 +69,7 @@ class FacebookAuthorize extends Component {
                     accessibilityLabel="Facebook"
                     bgColor="transparent"
                     icon="facebook"
-                    iconColor="gray"
+                    iconColor={this.props.isFacebookLoggedIn ? "blue" : "gray"}
                     onClick={this.handleClick}
                 />
             </Fragment>

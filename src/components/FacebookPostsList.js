@@ -3,7 +3,7 @@ import FacebookPostsCard from './FacebookPostsCard'
 
 class FacebookPostsList extends Component {
     render(){
-        //  console.log(this.props.facebookPost)
+         console.log(this.props)
          
         return (
             <Fragment>

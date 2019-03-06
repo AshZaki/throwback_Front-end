@@ -31,3 +31,12 @@
     transform: rotate(360deg);
   }
 }
+
+.centered{
+  background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("assets/throwback-02.jpg");
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+

@@ -3,6 +3,7 @@ import Board from './Board'
 
 class BoardList extends Component {
     render(){
+        console.log(this.props)
         return (
             <Fragment>
                 {this.props.allBoard.map(board => 
@@ -10,6 +11,8 @@ class BoardList extends Component {
                         board={board}
                         key={board.id} 
                         handleDeleteBoard={this.props.handleDeleteBoard}
+                        editBoard={this.props.editBoard}
+                        currentUser={this.props.currentUser}
                      />
                 )}
                
