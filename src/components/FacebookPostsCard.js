@@ -45,7 +45,7 @@ class FacebookPostsCard extends Component {
         return (
             <Fragment>
                 {this.props.post.place ?
-                    <Box maxWidth={500} column={12} padding={6} justifyContent="center" alignItems="center">
+                    <Box maxWidth={400} column={12} padding={6}>
                         {this.props.post.full_picture ?
                         <Box>
                              <Card
@@ -184,7 +184,7 @@ class FacebookPostsCard extends Component {
                         }
                     </Box>
                     :
-                    <Box maxWidth={500} column={12} padding={6} justifyContent="center" alignItems="center">
+                    <Box maxWidth={400} column={12} padding={6}>
                         {this.props.post.full_picture ?
                             <Card
                                 onMouseEnter={this.handleMouseEnter}

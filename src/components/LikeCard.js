@@ -53,6 +53,7 @@ class LikeCard extends Component {
                                     </Box>
                                 </Text>
                                 <Divider />
+                                {this.props.card.place_name ?
                                 <Box alignItems="end" display="flex">
                                     <Box marginRight={1} padding={1}>
                                         <Icon icon="location" accessibilityLabel="Location" color="darkGray" />
@@ -61,16 +62,8 @@ class LikeCard extends Component {
                                         {this.props.card.place_name}
                                     </Text>
                                 </Box>
-                            </Box>
-                            {/* <Box justifyContent="start" alignItems="center" display="flex">
-                            <a href={this.props.card.full_picture} download="test.jpeg">
-                            <IconButton
-                                    accessibilityLabel="Download"
-                                    bgColor="transparent"
-                                    icon="download"
-                                    iconColor="gray"/>
-                            </a>
-                            </Box> */}
+                                : null}
+                            </Box> 
                             <Box justifyContent="end" alignItems="center" display="flex">
                                 <Box padding={1}>
                                     <IconButton

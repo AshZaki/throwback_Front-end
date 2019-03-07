@@ -9,6 +9,8 @@ import 'gestalt/dist/gestalt.css';
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
 import FavoritesMapContainer from './FavoritesMapContainer';
 import Search from '../components/Search'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 class ThrowBack extends Component {
@@ -32,6 +34,10 @@ class ThrowBack extends Component {
     handleItemChange({ activeIndex }) {
         this.setState(prevState => ({ itemIndex: activeIndex }));
     };
+
+    notify = () => toast.error("You must login with at least one social media!", {
+        position: toast.POSITION.BOTTOM_CENTER
+    });
 
     componentDidMount() {
         this.getAllFavoritePosts()
@@ -81,6 +87,7 @@ class ThrowBack extends Component {
                 isGooglePhotosLoggedIn: true
             })
         )
+        
     }
 
     handleGooglePosts = (googlePost) => {
@@ -95,7 +102,7 @@ class ThrowBack extends Component {
         // console.log(fbcard)
         const data = {
             account_id: GGaccount.id,
-            board_id: 2,
+            board_id: 1,
             created_time: GGcard.creationTime,
             message: null,
             full_picture: GGcard.baseUrl,
@@ -114,7 +121,7 @@ class ThrowBack extends Component {
             .then(newGGCard =>
                 // console.log(newGGCard)
                 this.setState({
-                    likeCards: [newGGCard, ...this.state.likeCards]
+                    likeCards: [newGGCard, ...this.state.likeCards],
                 })
             )
     }

@@ -90,12 +90,12 @@ class Search extends Component {
                             "ranges": [
                                 {
                                     "startDate": {
-                                        "day": 5,
-                                        "month": 3,
+                                        "day": 13,
+                                        "month": 2,
                                         "year": 2019
                                     },
                                     "endDate": {
-                                        "day": 6,
+                                        "day": 7,
                                         "month": 3,
                                         "year": 2019
                                     }
