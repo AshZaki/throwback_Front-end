@@ -64,7 +64,9 @@ class Profile extends Component {
                                     </Box>
                                     <Box paddingX={1}>
                                         <GoogleAuthorize
-                                        
+                                            currentUser={this.props.loginUser}
+                                            onGGSuccess={this.props.onGGSuccess}
+                                            isGooglePhotosLoggedIn={this.props.isGooglePhotosLoggedIn}
                                         />
                                     </Box>
                                     <Box paddingX={1}>

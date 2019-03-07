@@ -39,13 +39,23 @@ class MyCalendar extends Component {
         startCalendar =
             <InfiniteCalendar
                 Component={withRange(Calendar)}
-                displayOptions={{
-                    layout: 'landscape'
-                   }}
                 width={800}
                 height={350}
                 selected={this.state.selectedDates}
                 onSelect={this.onCalendarSelect}
+                theme={{
+                    textColor: {
+                      default: '#333',
+                      active: '#FFF'
+                    },
+                    weekdayColor: '#ccc',
+                    headerColor: '#aaa',
+                    floatingNav: {
+                      background: 'rgba(81, 67, 138, 0.96)',
+                      color: '#FFF',
+                      chevron: '#FFA726'
+                    }
+                 }}
             />
 
         return (

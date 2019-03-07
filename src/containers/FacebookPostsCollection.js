@@ -5,7 +5,7 @@ import { Masonry } from 'gestalt';
 import 'gestalt/dist/gestalt.css';
 class FacebookPostsCollection extends Component {
     render() {
-        console.log(this.props)
+        // console.log(this.props)
 
 
         return (

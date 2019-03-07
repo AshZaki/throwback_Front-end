@@ -4,20 +4,29 @@
 import React, { Component, Fragment } from 'react';
 import MyCalendar from './MyCalendar'
 import ShowPostFromApi from '../containers/ShowPostFromApi'
-import { Box, Modal, Heading, Button, Column } from 'gestalt';
+
 import { addGooglePhotosScript } from '../scripts/logins';
-import 'gestalt/dist/gestalt.css';
 import { secrets } from '../scripts/secrets';
+
+import { Box, Modal, Heading, Button, Column } from 'gestalt';
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'gestalt/dist/gestalt.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 class Search extends Component {
     state = {
         fbLoggedIn: false,
         facebookPosts: [],
+        googlePhotoPosts: [],
         dates: {
             start: "",
             end: ""
         }
     }
+    notify = () => toast.error("You must login with at least one social media!", {
+        position: toast.POSITION.BOTTOM_CENTER
+    });
 
     handleDatesPicker = (date) => {
         // console.log(date)
@@ -39,10 +48,10 @@ class Search extends Component {
             };
             FB.init(params);
             FB.getLoginStatus(resp => {
-                console.log('FB:status:', resp.status);
-                if (resp.status === 'connected') {
-                    this.setState({ fbLoggedIn: true })
-                }
+                // console.log('FB:status:', resp.status);
+                // if (resp.status === 'connected') {
+                //     this.setState({ fbLoggedIn: true })
+                // }
             });
             await addGooglePhotosScript(secrets.GAPI_CLIENT_ID);
             gapi.load('auth2', function () {
@@ -61,65 +70,76 @@ class Search extends Component {
             console.log(error.name, ':', error.message);
         }
     }
-
+    atLeastOneAccountLoggedIn() {
+        if (this.props.isGooglePhotosLoggedIn || this.props.isFacebookLoggedIn) {
+            return true;
+        }
+        return false;
+    }
     onClickSearch = () => {
-
+        if (!this.atLeastOneAccountLoggedIn()) {
+            this.notify();
+            return;
+        }
         // google photos:
-        // gapi.client.photoslibrary.mediaItems.search({
-        //     "resource": {
-        //         "filters": {
-        //             "dateFilter": {
-        //                 "ranges": [
-        //                     {
-        //                         "startDate": {
-        //                             "day": 1,
-        //                             "month": 1,
-        //                             "year": 2017
-        //                         },
-        //                         "endDate": {
-        //                             "day": 3,
-        //                             "month": 3,
-        //                             "year": 2017
-        //                         }
-        //                     }
-        //                 ]
-        //             }
-        //         }
-        //     }
-        // })
-        // .then(function (response) {
-        //     // Handle the results here (response.result has the parsed body).
-        //     console.log("Response", response);
-        // },
-        //     function (err) { console.error("Execute error", err); });
-
-
-
-        // fb
-        const since = Math.floor(this.state.dates.start.getTime() / 1000);
-        const until = Math.floor(this.state.dates.end.getTime() / 1000);
-        // console.log(since, until)
-        FB.api(`/me?fields=posts.since(${since}).until(${until}){place,picture,full_picture,message,created_time,attachments{media,title,type,url,description}}`,
-            (response) => {
-                console.log(response)
-                if (response && !response.error) {
-                    this.setState({
-                        facebookPosts: response.posts.data,
-                    });
-                    this.props.handleFacebookPosts(this.state.facebookPosts);
+        if (this.props.isGooglePhotosLoggedIn) {
+            gapi.client.photoslibrary.mediaItems.search({
+                "resource": {
+                    "filters": {
+                        "dateFilter": {
+                            "ranges": [
+                                {
+                                    "startDate": {
+                                        "day": 5,
+                                        "month": 3,
+                                        "year": 2019
+                                    },
+                                    "endDate": {
+                                        "day": 6,
+                                        "month": 3,
+                                        "year": 2019
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 }
-            }
-        );
-
-
-
-
+            })
+                .then(response => {
+                    // Handle the results here (response.result has the parsed body).
+                    console.log("Response", response);
+                    this.setState({
+                        googlePhotoPosts: response.result.mediaItems
+                    })
+                    this.props.handleGooglePosts(this.state.googlePhotoPosts)
+                },
+                    function (err) { console.error("Execute error", err); }
+                );
+        }
+        if (this.props.isFacebookLoggedIn) {
+            const since = Math.floor(this.state.dates.start.getTime() / 1000);
+            const until = Math.floor(this.state.dates.end.getTime() / 1000);
+            // console.log(since, until)
+            FB.api(`/me?fields=posts.since(${since}).until(${until}){place,picture,full_picture,message,created_time,attachments{media,title,type,url,description}}`,
+                (response) => {
+                    console.log(response)
+                    if (response && !response.error) {
+                        this.setState({
+                            facebookPosts: response.posts.data,
+                        });
+                        this.props.handleFacebookPosts(this.state.facebookPosts);
+                    }
+                }
+            );
+        }
     }
 
     render() {
         console.log(this.props)
         return (
             <Fragment>
+                <ToastContainer />
+
                 <Box justifyContent="center" alignItems="center" padding={1} marginBottom={4}>
                     <MyCalendar
                         datesPicker={this.handleDatesPicker}
@@ -132,7 +152,7 @@ class Search extends Component {
                     <Column span={2}>
                         <Box color="white" padding={1}>
                             <Button color="red" text="SEARCH" type="submit"
-                                onClick={this.onClickSearch}
+                                onClick={this.onClickSearch.bind(this)}
                             />
                         </Box>
                     </Column>
@@ -149,6 +169,9 @@ class Search extends Component {
                         facebookPosts={this.props.facebookPosts}
                         facebookUser={this.props.facebookUser}
                         handleFBCardClicked={this.props.handleFBCardClicked}
+                        googlePosts={this.props.googlePosts}
+                        googleUser={this.props.googleUser}
+                        handleGGCardClicked={this.props.handleGGCardClicked}
                     />
                 </Box>
             </Fragment>

@@ -30,8 +30,7 @@ class Navbar extends Component {
         // console.log(this.props.currentUser)
         return (
             <Fragment>
-
-                <Box color="white" shape="rounded" padding={3} display="flex" direction="row" justifyContent="end" alignItems="center">
+                <Box shape="rounded" padding={3} display="flex" direction="row" justifyContent="end" alignItems="center">
                     <Box paddingX={1}>
                         <Avatar
                             size="md"

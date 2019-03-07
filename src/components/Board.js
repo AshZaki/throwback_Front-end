@@ -51,7 +51,7 @@ class Board extends Component {
         const images = this.props.board.favorite_posts;
         return (
             <Fragment>
-                <Box maxWidth={316} padding={2} column={12}>
+                <Box maxWidth={316} padding={2} margin={4} column={12}>
                     <Card
                         onMouseEnter={this.handleMouseEnter}
                         onMouseLeave={this.handleMouseLeave}>
@@ -94,15 +94,6 @@ class Board extends Component {
                         </Text>
                         {this.state.hovered ?
                         <Box justifyContent="center" alignItems="center" display="flex">
-                            <Box padding={1}>
-                                <IconButton
-                                    accessibilityLabel="View"
-                                    bgColor="transparent"
-                                    icon="view-type-default"
-                                    iconColor="gray"
-                                // onClick={() => this.props.handleDeleteBoard(this.props.board.id)}
-                                />
-                            </Box>
                             <Box padding={1}>
                                 <IconButton
                                     accessibilityLabel="Edit"

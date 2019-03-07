@@ -3,10 +3,10 @@ import FacebookPostsCard from './FacebookPostsCard'
 
 class FacebookPostsList extends Component {
     render(){
-         console.log(this.props)
+        //  console.log(this.props)
          
         return (
-            <Fragment>
+            <div className="flexedList">
                     {
                         this.props.facebookPosts.map(post => 
                              <FacebookPostsCard 
@@ -18,7 +18,7 @@ class FacebookPostsList extends Component {
                         )
                     }
                    
-            </Fragment>
+            </div>
         )
     }
 }

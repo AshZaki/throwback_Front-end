@@ -10,6 +10,9 @@ class GoogleAuthorize extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            GGToken: "",
+        }
     }
 
     async componentDidMount() {
@@ -24,9 +27,13 @@ class GoogleAuthorize extends Component {
         gapi.auth2.getAuthInstance()
             .signIn({ scope: "https://www.googleapis.com/auth/photoslibrary https://www.googleapis.com/auth/photoslibrary.readonly https://www.googleapis.com/auth/photoslibrary.readonly.appcreateddata" })
             .then(response => {
-                // debugger;
+                // debugger
                 // response.getId()
-                console.log("Sign-in successful", response)
+                this.setState({
+                    GGToken: response.getId()
+                })
+                // console.log("Sign-in successful", response)
+                this.props.onGGSuccess(this.state, this.props.currentUser)
             },
                        err => console.error("Error signing in", err))
             .then(_ => {
@@ -43,7 +50,7 @@ class GoogleAuthorize extends Component {
                     accessibilityLabel="Google Phpto"
                     bgColor="transparent"
                     icon="google-plus"
-                    iconColor="gray"
+                    iconColor={this.props.isGooglePhotosLoggedIn ? "red" : "gray"}
                     onClick={this.handleClick}
                 />
             </Fragment>

@@ -5,7 +5,7 @@ class BoardList extends Component {
     render(){
         console.log(this.props)
         return (
-            <Fragment>
+            <div className="flexedList">
                 {this.props.allBoard.map(board => 
                      <Board
                         board={board}
@@ -16,7 +16,7 @@ class BoardList extends Component {
                      />
                 )}
                
-            </Fragment>
+            </div>
         
         )
     }

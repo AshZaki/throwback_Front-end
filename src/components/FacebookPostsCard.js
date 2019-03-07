@@ -40,7 +40,7 @@ class FacebookPostsCard extends Component {
     }
 
     render() {
-        console.log(this.props)
+        // console.log(this.props)
         const { showLayer } = this.state;
         return (
             <Fragment>
@@ -109,39 +109,12 @@ class FacebookPostsCard extends Component {
                                 <Box justifyContent="end" alignItems="center" display="flex">
                                     <Box padding={1}>
                                         <IconButton
-                                            inline
                                             accessibilityLabel="Love"
                                             bgColor="transparent"
                                             icon="heart"
                                             iconColor={this.state.showConfirmationToast ? "red" : "gray"}
                                             onClick={this.onHandleClick}
                                         />
-                                        <Box
-                                            fit
-                                            dangerouslySetInlineStyle={{
-                                                __style: {
-                                                    bottom: 50,
-                                                    left: '50%',
-                                                    transform: 'translateX(-50%)',
-                                                },
-                                            }}
-                                            paddingX={1}
-                                            position='fixed'
-                                        >
-                                            {this.state.showConfirmationToast ? (
-                                                <Toast
-                                                    text={['Saved to', 'Board']}
-                                                    thumbnail={
-                                                        <Image
-                                                            alt='Saved to home decor board'
-                                                            naturalHeight={564}
-                                                            naturalWidth={564}
-                                                            src='/gestalt/static/media/stock1.291c62ad.jpg'
-                                                        />
-                                                    }
-                                                />
-                                            ) : null}
-                                        </Box>
                                     </Box>
                                     <Box padding={1}>
                                         <IconButton
@@ -199,7 +172,6 @@ class FacebookPostsCard extends Component {
                                 </Box>
                                 <Box padding={1} justifyContent="end" alignItems="center">
                                     <IconButton
-                                        inline
                                         accessibilityLabel="Love"
                                         bgColor="transparent"
                                         icon="heart"
@@ -265,7 +237,6 @@ class FacebookPostsCard extends Component {
                                 <Box display="flex" justifyContent="end" alignItems="center">
                                     <Box padding={1}>
                                         <IconButton
-                                            inline
                                             accessibilityLabel="Love"
                                             bgColor="transparent"
                                             icon="heart"
@@ -316,7 +287,6 @@ class FacebookPostsCard extends Component {
                                 </Text>
                                 <Box alignItems="baseline" justifyContent="end" alignItems="center">
                                     <IconButton
-                                        inline
                                         accessibilityLabel="Love"
                                         bgColor="transparent"
                                         icon="heart"

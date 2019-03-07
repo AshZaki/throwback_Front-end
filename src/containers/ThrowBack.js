@@ -18,8 +18,10 @@ class ThrowBack extends Component {
             likeCards: [],
             allBoard: [],
             userFBAccount: [],
+            userGGAccount: [],
             facebookUser: null,
             facebookPosts: [],
+            googlePosts: [],
             itemIndex: 0,
             isFacebookLoggedIn: false,
             isGooglePhotosLoggedIn: false,
@@ -56,14 +58,70 @@ class ThrowBack extends Component {
             })
     }
 
-    onGooglePhotosLoggedIn = () => {
-        this.setState({
-            isGooglePhotosLoggedIn: true
+    onGooglePhotosLoggedIn = (GgUserObj, currentUser) => {
+        // console.log(GgUserObj, currentUser)
+        fetch('http://localhost:4000/api/v1/accounts', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                auth_name: currentUser.username,
+                auth_token: GgUserObj.GGToken,
+                user_id: currentUser.id,
+                social_id: 4
+            })
         })
+        .then(res => res.json())
+        .then(GGUser =>
+            // console.log(GGUser))
+            this.setState({
+                userGGAccount: GGUser,
+                isGooglePhotosLoggedIn: true
+            })
+        )
+    }
+
+    handleGooglePosts = (googlePost) => {
+        console.log(googlePost)
+        this.setState({
+            googlePosts: googlePost
+        }) 
+    }
+
+    handleGGCardClicked = (GGcard, GGaccount) => {
+        // debugger
+        // console.log(fbcard)
+        const data = {
+            account_id: GGaccount.id,
+            board_id: 2,
+            created_time: GGcard.creationTime,
+            message: null,
+            full_picture: GGcard.baseUrl,
+            place_name: null,
+            latitude: null,
+            longitude: null,
+        }
+        fetch('http://localhost:4000/api/v1/favorite_posts', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify(data)
+        }).then(res => res.json())
+            .then(newGGCard =>
+                // console.log(newGGCard)
+                this.setState({
+                    likeCards: [newGGCard, ...this.state.likeCards]
+                })
+            )
     }
 
     onFacebookLoggedIn = (fbUserObj, currentUser) => {
-        // console.log('you did it', fbUserObj, currentUser)
+        // debugger
+        console.log('you did it', fbUserObj, currentUser)
         fetch('http://localhost:4000/api/v1/accounts', {
             method: 'POST',
             headers: {
@@ -77,20 +135,18 @@ class ThrowBack extends Component {
                 social_id: 1
             })
         })
-            .then(res => res.json())
-            .then(fbUser => {
-                console.log('logging into fb')
-                this.setState({
-                    userFBAccount: fbUser,
-                    isFacebookLoggedIn: true
-                })
-
-
+        .then(res => res.json())
+        .then(fbUser => {
+            console.log('logging into fb')
+            this.setState({
+                userFBAccount: fbUser,
+                isFacebookLoggedIn: true
             })
+        })
     }
 
     handleFacebookPosts = (post) => {
-        // console.log(post)
+        console.log(post)
         this.setState({
             facebookPosts: post
         })
@@ -104,7 +160,7 @@ class ThrowBack extends Component {
             board_id: 1,
             created_time: fbcard.created_time,
             message: fbcard.message,
-            full_picture: fbcard.attachments.data[0].media.image.src,
+            full_picture: (!fbcard.attachments.data[0].media? fbcard.full_picture : fbcard.attachments.data[0].media.image.src ),
             place_name: (!fbcard.place ? null : fbcard.place.name),
             latitude: (!fbcard.place ? null : fbcard.place.location.latitude),
             longitude: (!fbcard.place ? null : fbcard.place.location.longitude)
@@ -211,7 +267,7 @@ class ThrowBack extends Component {
         // console.log(this.props)
         const items = [
             'Search',
-            'Like',
+            'Favorited',
             'Boards',
             <Icon
                 icon="location"
@@ -226,15 +282,15 @@ class ThrowBack extends Component {
                     onLogOut={this.props.onLogOut}
                     addNewToken={this.addNewToken}
                     onFacebookLoggedIn={this.onFacebookLoggedIn}
-                    handleFacebookPosts={this.handleFacebookPosts}
                 />
 
                 <Profile
                     loginUser={this.props.logged_in}
-                    // currentUser={this.props.currentUser}
+                    onGGSuccess={this.onGooglePhotosLoggedIn}
                     onSuccess={this.onFacebookLoggedIn}
                     handleFacebookPosts={this.handleFacebookPosts}
                     isFacebookLoggedIn={this.state.isFacebookLoggedIn}
+                    isGooglePhotosLoggedIn={this.state.isGooglePhotosLoggedIn}
                 />
 
                 <Box display="flex" direction="row" paddingY={2}>
@@ -254,9 +310,15 @@ class ThrowBack extends Component {
                         <Column span={10}>
                             <Search
                                 handleFacebookPosts={this.handleFacebookPosts}
+                                handleGooglePosts={this.handleGooglePosts}
+                                googleUser={this.state.userGGAccount}
                                 facebookPosts={this.state.facebookPosts}
+                                googlePosts={this.state.googlePosts}
                                 facebookUser={this.state.userFBAccount}
+                                isFacebookLoggedIn={this.state.isFacebookLoggedIn}
+                                isGooglePhotosLoggedIn={this.state.isGooglePhotosLoggedIn}
                                 handleFBCardClicked={this.handleFBCardClicked}
+                                handleGGCardClicked={this.handleGGCardClicked}
                             />
                             </Column>
                         <Column span={1}></Column>
