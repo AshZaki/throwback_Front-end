@@ -13,6 +13,7 @@ class BoardList extends Component {
                         handleDeleteBoard={this.props.handleDeleteBoard}
                         editBoard={this.props.editBoard}
                         currentUser={this.props.currentUser}
+                        
                      />
                 )}
                

@@ -164,7 +164,7 @@ class ThrowBack extends Component {
         // console.log(fbcard)
         const data = {
             account_id: fbaccount.id,
-            board_id: 1,
+            board_id: 2,
             created_time: fbcard.created_time,
             message: fbcard.message,
             full_picture: (!fbcard.attachments.data[0].media? fbcard.full_picture : fbcard.attachments.data[0].media.image.src ),

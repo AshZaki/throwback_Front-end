@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
-import { Box, Button, Card, Collage, Column, Divider, IconButton, Image, Label, Mask, Modal, Text, TextArea, TextField, Flyout } from 'gestalt';
+import { Box, Button, Card, Collage, Column, Divider, IconButton, Image, Label, Mask, Modal, Text, TextArea, TextField, Flyout, Layer } from 'gestalt';
 import 'gestalt/dist/gestalt.css';
+import InsideBoardList from './InsideBoardList'
 
 class Board extends Component {
     constructor(props) {
@@ -9,6 +10,7 @@ class Board extends Component {
             isOpen: false,
             hovered: false,
             showModal: false,
+            showLayer: false,
             name: "",
             description: "",
         };
@@ -16,6 +18,7 @@ class Board extends Component {
         this.handleMouseEnter = this._handleMouseEnter.bind(this);
         this.handleMouseLeave = this._handleMouseLeave.bind(this);
         this.handleToggleModal = this._handleToggleModal.bind(this);
+        this.handleToggle = this._handleToggle.bind(this);
     }
     _handleMouseEnter() {
         this.setState(() => ({ hovered: true }));
@@ -25,6 +28,9 @@ class Board extends Component {
     }
     _handleToggleModal() {
         this.setState(prevState => ({ showModal: !prevState.showModal }));
+    }
+    _handleToggle() {
+        this.setState(prevState => ({ showLayer: !prevState.showLayer }));
     }
 
     onTypingNameChange = (e) => {
@@ -48,6 +54,7 @@ class Board extends Component {
 
     render() {
         const { showModal } = this.state;
+        const { showLayer } = this.state;
         const images = this.props.board.favorite_posts;
         return (
             <Fragment>
@@ -93,136 +100,165 @@ class Board extends Component {
                             </Box>
                         </Text>
                         {this.state.hovered ?
-                        <Box justifyContent="center" alignItems="center" display="flex">
-                            <Box padding={1}>
-                                <IconButton
-                                    accessibilityLabel="Edit"
-                                    bgColor="transparent"
-                                    icon="edit"
-                                    iconColor="gray"
-                                    onClick={this.handleToggleModal}
-                                />
-                                {showModal && (
-                                    <Modal
-                                        accessibilityCloseLabel="close"
-                                        accessibilityModalLabel="Edit Julia's board"
-                                        heading="Edit your board"
-                                        onDismiss={this.handleToggleModal}
-                                        footer={
-                                            <Box
-                                                justifyContent="between"
-                                                display="flex"
-                                                direction="row"
-                                                marginLeft={-1}
-                                                marginRight={-1}>
-                                                <Box column={6} paddingX={1}>
-                                                    <Box
-                                                        display="flex"
-                                                        direction="row"
-                                                        justifyContent="end"
-                                                        marginLeft={-1}
-                                                        marginRight={-1}>
-                                                        <Box paddingX={1}>
-                                                            <Button text="Cancel" inline onClick={this.handleToggleModal} />
-                                                        </Box>
-                                                        <Box paddingX={1}>
-                                                            <Button color="red" inline text="Save" type="submit" onClick={this.handleSubmit} />
-                                                        </Box>
+                            <Box justifyContent="center" alignItems="center" display="flex">
+                                <Box padding={1}>
+                                    <IconButton
+                                        accessibilityLabel="View"
+                                        bgColor="transparent"
+                                        icon="view-type-dense"
+                                        iconColor="gray"
+                                        onClick={this.handleToggle}
+                                    />
+                                    {showLayer && (
+                                        <Layer>
+                                            <Box color="darkWash" position="fixed" top left right bottom display="flex" alignItems="center" justifyContent="center">
+                                                <Box color="white" padding={3} display="flex" alignItems="center">
+                                                        <InsideBoardList
+                                                            fav_post={this.props.board}
+                                                            showLayer={this.state.showLayer}
+                                                        />    
+
+                                                    <Box marginStart={2}>
+                                                        <IconButton
+                                                            accessibilityLabel="Close"
+                                                            icon="cancel"
+                                                            onClick={this.handleToggle}
+                                                        />
                                                     </Box>
                                                 </Box>
                                             </Box>
-                                        }
-                                        size="md">
-                                        <Box display="flex" direction="row" position="relative">
-                                            <Column span={12}>
-                                                <Box paddingY={2} paddingX={4} display="flex">
-                                                    <Column span={4}>
-                                                        <Label htmlFor="name">
-                                                            <Text align="left" bold>
-                                                                Name
-                                                            </Text>
-                                                        </Label>
-                                                    </Column>
-                                                    <Column span={8}>
-                                                        <TextField id="name" onChange={this.onTypingNameChange} />
-                                                    </Column>
-                                                </Box>
-                                                <Divider />
-                                                <Box paddingY={2} paddingX={4} display="flex">
-                                                    <Column span={4}>
-                                                        <Label htmlFor="desc">
-                                                            <Text align="left" bold>
-                                                                Description
-                                                            </Text>
-                                                        </Label>
-                                                    </Column>
-                                                    <Column span={8}>
-                                                        <TextArea id="desc" onChange={this.onTypingDesChange} />
-                                                    </Column>
-                                                </Box>
-                                            </Column>
-                                        </Box>
-                                    </Modal>
-                                )}
-                            </Box>
-                            <Box padding={1}>
-                                <IconButton
-                                    accessibilityLabel="Delete"
-                                    bgColor="transparent"
-                                    icon="trash-can"
-                                    iconColor="gray"
-                                    onClick={() => this.props.handleDeleteBoard(this.props.board.id)}
-                                />
-                            </Box>
-                            <Box>
-                                <Box padding={1} display="inlineBlock" ref={this.anchorRef} >
+                                        </Layer>
+                                    )}
+                                </Box>
+                                <Box padding={1}>
                                     <IconButton
-                                        accessibilityLabel="see more"
-                                        accessibilityHaspopup
-                                        accessibilityExpanded={this.state.isOpen}
+                                        accessibilityLabel="Edit"
                                         bgColor="transparent"
-                                        icon="ellipsis"
+                                        icon="edit"
                                         iconColor="gray"
-                                        onClick={() => this.setState({ isOpen: !this.state.isOpen })}
+                                        onClick={this.handleToggleModal}
+                                    />
+                                    {showModal && (
+                                        <Modal
+                                            accessibilityCloseLabel="close"
+                                            accessibilityModalLabel="Edit Julia's board"
+                                            heading="Edit your board"
+                                            onDismiss={this.handleToggleModal}
+                                            footer={
+                                                <Box
+                                                    justifyContent="between"
+                                                    display="flex"
+                                                    direction="row"
+                                                    marginLeft={-1}
+                                                    marginRight={-1}>
+                                                    <Box column={6} paddingX={1}>
+                                                        <Box
+                                                            display="flex"
+                                                            direction="row"
+                                                            justifyContent="end"
+                                                            marginLeft={-1}
+                                                            marginRight={-1}>
+                                                            <Box paddingX={1}>
+                                                                <Button text="Cancel" inline onClick={this.handleToggleModal} />
+                                                            </Box>
+                                                            <Box paddingX={1}>
+                                                                <Button color="red" inline text="Save" type="submit" onClick={this.handleSubmit} />
+                                                            </Box>
+                                                        </Box>
+                                                    </Box>
+                                                </Box>
+                                            }
+                                            size="md">
+                                            <Box display="flex" direction="row" position="relative">
+                                                <Column span={12}>
+                                                    <Box paddingY={2} paddingX={4} display="flex">
+                                                        <Column span={4}>
+                                                            <Label htmlFor="name">
+                                                                <Text align="left" bold>
+                                                                    Name
+                                                            </Text>
+                                                            </Label>
+                                                        </Column>
+                                                        <Column span={8}>
+                                                            <TextField id="name" onChange={this.onTypingNameChange} />
+                                                        </Column>
+                                                    </Box>
+                                                    <Divider />
+                                                    <Box paddingY={2} paddingX={4} display="flex">
+                                                        <Column span={4}>
+                                                            <Label htmlFor="desc">
+                                                                <Text align="left" bold>
+                                                                    Description
+                                                            </Text>
+                                                            </Label>
+                                                        </Column>
+                                                        <Column span={8}>
+                                                            <TextArea id="desc" onChange={this.onTypingDesChange} />
+                                                        </Column>
+                                                    </Box>
+                                                </Column>
+                                            </Box>
+                                        </Modal>
+                                    )}
+                                </Box>
+                                <Box padding={1}>
+                                    <IconButton
+                                        accessibilityLabel="Delete"
+                                        bgColor="transparent"
+                                        icon="trash-can"
+                                        iconColor="gray"
+                                        onClick={() => this.props.handleDeleteBoard(this.props.board.id)}
                                     />
                                 </Box>
-                                {this.state.isOpen && (
-                                    <Flyout anchor={this.anchorRef.current} onDismiss={() => undefined} idealDirection="up" size={165}>
-                                        <Box display="flex">
-                                            <IconButton
-                                                accessibilityLabel="Facebook"
-                                                bgColor="transparent"
-                                                icon="facebook"
-                                                iconColor="gray"
-                                            // onClick={() => this.props.handleDeleteBoard(this.props.board.id)}
-                                            />
-                                            <IconButton
-                                                accessibilityLabel="Twitter"
-                                                bgColor="transparent"
-                                                icon="twitter"
-                                                iconColor="gray"
-                                            // onClick={() => this.props.handleDeleteBoard(this.props.board.id)}
-                                            />
-                                            <IconButton
-                                                accessibilityLabel="Gmail"
-                                                bgColor="transparent"
-                                                icon="gmail"
-                                                iconColor="gray"
-                                            // onClick={() => this.props.handleDeleteBoard(this.props.board.id)}
-                                            />
-                                            <IconButton
-                                                accessibilityLabel="Download"
-                                                bgColor="transparent"
-                                                icon="download"
-                                                iconColor="gray"
-                                            // onClick={() => this.props.handleDeleteBoard(this.props.board.id)}
-                                            />
-                                        </Box>
-                                    </Flyout>
-                                )}
+                                <Box>
+                                    <Box padding={1} display="inlineBlock" ref={this.anchorRef} >
+                                        <IconButton
+                                            accessibilityLabel="see more"
+                                            accessibilityHaspopup
+                                            accessibilityExpanded={this.state.isOpen}
+                                            bgColor="transparent"
+                                            icon="ellipsis"
+                                            iconColor="gray"
+                                            onClick={() => this.setState({ isOpen: !this.state.isOpen })}
+                                        />
+                                    </Box>
+                                    {this.state.isOpen && (
+                                        <Flyout anchor={this.anchorRef.current} onDismiss={() => undefined} idealDirection="up" size={165}>
+                                            <Box display="flex">
+                                                <IconButton
+                                                    accessibilityLabel="Facebook"
+                                                    bgColor="transparent"
+                                                    icon="facebook"
+                                                    iconColor="gray"
+                                                // onClick={() => this.props.handleDeleteBoard(this.props.board.id)}
+                                                />
+                                                <IconButton
+                                                    accessibilityLabel="Twitter"
+                                                    bgColor="transparent"
+                                                    icon="twitter"
+                                                    iconColor="gray"
+                                                // onClick={() => this.props.handleDeleteBoard(this.props.board.id)}
+                                                />
+                                                <IconButton
+                                                    accessibilityLabel="Gmail"
+                                                    bgColor="transparent"
+                                                    icon="gmail"
+                                                    iconColor="gray"
+                                                // onClick={() => this.props.handleDeleteBoard(this.props.board.id)}
+                                                />
+                                                <IconButton
+                                                    accessibilityLabel="Download"
+                                                    bgColor="transparent"
+                                                    icon="download"
+                                                    iconColor="gray"
+                                                // onClick={() => this.props.handleDeleteBoard(this.props.board.id)}
+                                                />
+                                            </Box>
+                                        </Flyout>
+                                    )}
+                                </Box>
                             </Box>
-                        </Box>
-                        :null}
+                            : null}
                     </Card>
                 </Box>
             </Fragment>
